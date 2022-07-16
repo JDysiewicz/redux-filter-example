@@ -1,26 +1,80 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { availableFilters, FilterFn } from "./filters";
+import { useGetFilteredArray } from "./hooks";
+import { RootState } from "./reducer"
+import { addFilter, addProgram } from "./state/actions";
+import { Filter, FilterTypes, Program } from "./types";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const App = () => {
+  // selector to grab programs from correct section
+  const programs = useSelector((state: RootState) => state.programReducer.programs);
+
+  // grab filtered array from custom hook
+  const {filteredPrograms, activeFilters} = useGetFilteredArray(programs)
+
+  // access the dispatch function to fire actions at reducers
+  const dispatch = useDispatch();
+
+  // add the filters; can be done anywhere as via dispatch
+  useEffect(() => {
+    const filterByIsHiring: Filter = {
+      type: FilterTypes.BY_HIRING,
+      values: true
+    }
+    const filterByName: Filter = {
+      type: FilterTypes.BY_NAME,
+      values: ["b", "a"]
+    }
+    // dispatch(addFilter(filterByIsHiring))
+    dispatch(addFilter(filterByName))
+  }, [])
+
+  // populate programs; mimic network request (can be done anywhere as via dispatch)
+  useEffect(() => {
+    setTimeout(() => {
+      createProgs().forEach(prog => dispatch(addProgram(prog)))
+    }, 5000)
+    }, [])
+
+    return(
+  <div>
+    <h1>Hello</h1>
+    <h2>Unfiltered</h2>
+    {programs.map(program => {
+      return(
+        <div key={program.id}>
+          <p>{JSON.stringify(program)}</p>
+        </div>
+      )
+    })}
+
+    <h2>Filtered</h2>
+    {filteredPrograms.map(program => {
+      return(
+        <div key={program.id}>
+          <p>{JSON.stringify(program)}</p>
+        </div>
+      )
+    })}
+
+    <div>
+      <h2>Active Filters</h2>
+      <p>{JSON.stringify(activeFilters)}</p>
     </div>
-  );
+    </div>
+  )
 }
 
-export default App;
+export default App
+
+// helper func to just populate random data
+const createProgs = (): Program[] => {
+    const progs: Program[] = [
+    {name: "a", id: "asdasd", isHiring: false},
+    {name: "b", id: "badsbbdsa", isHiring: true},
+    {name: "c", id: "aadddss", isHiring: false},
+    {name: "d", id: "fgdfgdfg", isHiring: true}
+    ]
+    return progs;
+  }
