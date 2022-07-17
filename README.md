@@ -26,7 +26,7 @@ A `reducer` is a function which takes 2 parameters: the current `state` which th
 
 Reducers then often contain a `switch` statement which will perform some logic based on the action's `type`. Each `case` must `return` the _new_ state of the store (often done via spreading the current `state` into a new object, then updating the relevant property based on the action). Importantly, the `switch` statement requires a `default` case which returns the current state. This is because actions are sent to all reducers when `dispatch` is used (see below), and so they need to be able to handle actions they don't care about.
 
-![Reducers use switch statements to manage logic based on the action's type](./static/redux-5.jpg)
+![Reducers use switch statements to manage logic based on the action's type](./static/redux-7.jpg)
 
 ### Actions
 
@@ -35,11 +35,11 @@ An `action` is simple a JS object with 2 properties:
 - `type`: A string-constant which identifies the action _uniquely_
 - `payload`: An _optional_ property which contains data needed for the action (e.g. details of an `item` when adding to the cart via the `ADD_TO_CART` type).
 
-![Actions are JS objects with a type and an optional payload](./static/redux-6.jpg)
+![Actions are JS objects with a type and an optional payload](./static/redux-5.jpg)
 
 Action `type`s are literally just strings. We use `const` and use SCREAM*CASE to denote that they are \_global* constants, as each action `type` **must** be globally unique.
 
-![Action types are just strings, we assign them as constants to reduce typos and to ensure globally unique](./static/redux-7.jpg)
+![Action types are just strings, we assign them as constants to reduce typos and to ensure globally unique](./static/redux-6.jpg)
 
 ### Using the Redux Store
 
